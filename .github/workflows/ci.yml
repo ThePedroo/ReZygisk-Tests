@@ -36,14 +36,6 @@ jobs:
           ./gradlew zipRelease
           ./gradlew zipDebug
 
-      - name: Prepare artifact
-        if: success()
-        id: prepareArtifact
-        run: |
-          releaseName=`ls module/build/outputs/release/ReZygisk-v*-release.zip | awk -F '(/|.zip)' '{print $5}'` && echo "releaseName=$releaseName" >> $GITHUB_OUTPUT
-          debugName=`ls module/build/outputs/release/ReZygisk-v*-debug.zip | awk -F '(/|.zip)' '{print $5}'` && echo "debugName=$debugName" >> $GITHUB_OUTPUT
-
-
       - name: Upload release
         uses: actions/upload-artifact@v7
         with:
