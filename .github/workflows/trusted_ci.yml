@@ -48,13 +48,15 @@ jobs:
           ./gradlew zipDebug
 
       - name: Upload release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.prepareArtifact.outputs.releaseName }}
-          path: "./zksu-release/*"
+          path: "module/build/outputs/release/ReZygisk-v*-release.zip"
+          archive: false
 
       - name: Upload debug
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.prepareArtifact.outputs.debugName }}
-          path: "./zksu-debug/*"
+          path: "module/build/outputs/release/ReZygisk-v*-debug.zip"
+          archive: false
