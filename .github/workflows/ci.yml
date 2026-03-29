@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: "recursive"
           fetch-depth: 0
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: "17"
@@ -25,7 +25,7 @@ jobs:
         run: echo "y" | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "ndk;29.0.13113456"
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Build with Gradle
         run: |
@@ -42,17 +42,18 @@ jobs:
         run: |
           releaseName=`ls module/build/outputs/release/ReZygisk-v*-release.zip | awk -F '(/|.zip)' '{print $5}'` && echo "releaseName=$releaseName" >> $GITHUB_OUTPUT
           debugName=`ls module/build/outputs/release/ReZygisk-v*-debug.zip | awk -F '(/|.zip)' '{print $5}'` && echo "debugName=$debugName" >> $GITHUB_OUTPUT
-          unzip module/build/outputs/release/ReZygisk-v*-release.zip -d zksu-release
-          unzip module/build/outputs/release/ReZygisk-v*-debug.zip -d zksu-debug
+
 
       - name: Upload release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.prepareArtifact.outputs.releaseName }}
-          path: "./zksu-release/*"
+          path: "module/build/outputs/release/ReZygisk-v*-release.zip"
+          archive: false
 
       - name: Upload debug
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.prepareArtifact.outputs.debugName }}
-          path: "./zksu-debug/*"
+          path: "module/build/outputs/release/ReZygisk-v*-debug.zip"
+          archive: false
