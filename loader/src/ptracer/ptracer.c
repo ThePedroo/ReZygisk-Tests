@@ -83,7 +83,7 @@ static bool inject_tango(int pid, const char *lib_path, uint32_t libc_init_targe
     /* INFO: Data for the code above (lib_base, lib_size, lib_entry) */
     lib_base,
     lib_size,
-    lib_entry | 1,
+    lib_entry,
     0,          /* INFO: Placeholder for the stub's later use */
   };
 

@@ -15,6 +15,17 @@ LOADER_DONE = $(OBJ_DIR)/loader/.done
 ZYGISKD_DONE = $(OBJ_DIR)/zygiskd/.done
 MODULE_DONE = $(BUILD_DIR)/module-$(BUILD_TYPE).done
 
+LOADER_INPUTS = common.mk loader/Makefile \
+        $(shell find loader/src -type f | sort)
+
+ZYGISKD_INPUTS = common.mk zygiskd/Makefile \
+        $(shell find zygiskd/src -type f | sort)
+
+MODULE_INPUTS = scripts/sign.py \
+        $(shell find module/src -type f | sort) \
+        $(shell find webroot -type f | sort) \
+        $(wildcard module/private_key module/public_key)
+
 .PHONY: debug release build clean                                         \
         installKsu installMagisk installAPatch                            \
         installKsuAndReboot installMagiskAndReboot installAPatchAndReboot
@@ -27,17 +38,18 @@ release:
 
 build: $(ZIP_FILE)
 
-$(LOADER_DONE):
+$(LOADER_DONE): $(LOADER_INPUTS)
 	$(MAKE) -C loader BUILD_TYPE=$(BUILD_TYPE) BUILD_DIR=$(BUILD_DIR) ZKSU_VERSION=$(ZKSU_VERSION)
 	@mkdir -p $(dir $@)
 	@touch $@
 
-$(ZYGISKD_DONE):
+$(ZYGISKD_DONE): $(ZYGISKD_INPUTS)
 	$(MAKE) -C zygiskd BUILD_TYPE=$(BUILD_TYPE) BUILD_DIR=$(BUILD_DIR) ZKSU_VERSION=$(ZKSU_VERSION)
 	@mkdir -p $(dir $@)
 	@touch $@
 
-$(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE)
+$(MODULE_DONE): $(LOADER_DONE) $(ZYGISKD_DONE) $(MODULE_INPUTS)
+
 	@rm -rf $(MODULE_OUT)
 	@mkdir -p $(MODULE_OUT)/META-INF/com/google/android
 
