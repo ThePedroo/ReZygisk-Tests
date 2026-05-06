@@ -17,8 +17,10 @@ else
 endif
 
 ifeq ($(TERMUX_VERSION),)
+ZYGISKD_LINK_FLAGS =
 ZYGISKD_LIBS = -llog
 else
+ZYGISKD_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--unresolved-symbols=ignore-all
 ZYGISKD_LIBS =
 endif
 
@@ -60,4 +62,4 @@ $(OBJ_DIR)/%.o: src/%.c
 
 $(BIN): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(CC_ARCH) $(TYPE_LDFLAGS) $(OBJS) $(ZYGISKD_LIBS) -o $@
+	$(CC_ARCH) $(TYPE_LDFLAGS) $(ZYGISKD_LINK_FLAGS) $(OBJS) $(ZYGISKD_LIBS) -o $@
