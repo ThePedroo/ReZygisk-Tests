@@ -28,9 +28,8 @@ COMMON_LDFLAGS = -Wl,--build-id=none -Wl,--no-rosegment -Wl,--no-undefined-versi
 SHARED_LINK_FLAGS =
 SHARED_LIBS = -llog -lm
 else
-COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=none -Wl,--no-rosegment           \
-				 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
-				 -Qunused-arguments -Wl,--gc-sections
+COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=none -Wl,--no-rosegment        \
+				 -Wl,--no-undefined-version -Qunused-arguments -Wl,--gc-sections
 SHARED_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--allow-shlib-undefined
 SHARED_LIBS =
 endif
