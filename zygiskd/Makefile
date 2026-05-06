@@ -20,7 +20,7 @@ ifeq ($(TERMUX_VERSION),)
 ZYGISKD_LINK_FLAGS =
 ZYGISKD_LIBS = -llog
 else
-ZYGISKD_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--unresolved-symbols=ignore-all
+ZYGISKD_LINK_FLAGS = -Wl,--unresolved-symbols=ignore-all
 ZYGISKD_LIBS =
 endif
 
