@@ -29,7 +29,7 @@ COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment       
 SHARED_LINK_FLAGS =
 SHARED_LIBS = -llog -lm
 else
-COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment           \
+COMMON_LDFLAGS = -Wl,--build-id=sha1 -Wl,--no-rosegment           \
 				 -Wl,--no-undefined-version -Qunused-arguments -Wl,--gc-sections
 SHARED_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--allow-shlib-undefined
 SHARED_LIBS =
