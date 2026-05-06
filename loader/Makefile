@@ -23,12 +23,14 @@ LOADER_CFLAGS = -std=c18 -D_GNU_SOURCE -Wall -Wextra -fno-rtti -fno-exceptions  
 				'-D__FILE__=__FILE_NAME__' -DZKSU_VERSION=\"$(ZKSU_VERSION)\"
 
 ifeq ($(TERMUX_VERSION),)
-COMMON_LDFLAGS = -Wl,--build-id=none -Wl,--no-rosegment -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
+COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment           \
+				 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
 				 -Qunused-arguments -Wl,--gc-sections
 SHARED_LINK_FLAGS =
 SHARED_LIBS = -llog -lm
 else
-COMMON_LDFLAGS = -Wl,--no-rosegment -Wl,--no-undefined-version -Qunused-arguments -Wl,--gc-sections
+COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment           \
+				 -Wl,--no-undefined-version -Qunused-arguments -Wl,--gc-sections
 SHARED_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--allow-shlib-undefined
 SHARED_LIBS =
 endif
