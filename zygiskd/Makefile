@@ -60,4 +60,4 @@ $(OBJ_DIR)/%.o: src/%.c
 
 $(BIN): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(CC_ARCH) $(TYPE_LDFLAGS) $(OBJS) $(ZYGISKD_LIBS) -o $@
+	$(CC_ARCH) $(TYPE_LDFLAGS) $(OBJS) -llog -o $@
