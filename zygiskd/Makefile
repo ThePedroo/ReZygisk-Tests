@@ -16,6 +16,12 @@ else
 	TYPE_LDFLAGS =
 endif
 
+ifeq ($(TERMUX_VERSION),)
+ZYGISKD_LIBS = -llog
+else
+ZYGISKD_LIBS =
+endif
+
 ZYGISKD_CFLAGS = -D_GNU_SOURCE -std=c99 -Wpedantic -Wall -Wextra -Werror  \
 			 	 -Wformat -Wuninitialized -Wshadow -Wno-zero-length-array \
 			 	 -Wno-fixed-enum-extension -Wno-unknown-warning-option    \
@@ -54,4 +60,4 @@ $(OBJ_DIR)/%.o: src/%.c
 
 $(BIN): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(CC_ARCH) $(TYPE_LDFLAGS) $(OBJS) -llog -o $@
+	$(CC_ARCH) $(TYPE_LDFLAGS) $(OBJS) $(ZYGISKD_LIBS) -o $@

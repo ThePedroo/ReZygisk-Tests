@@ -14,7 +14,10 @@ import struct
 import hashlib
 from pathlib import Path
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+try:
+  from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+except ModuleNotFoundError:
+  Ed25519PrivateKey = None
 
 def file_sign_data(name: str, filepath: str) -> bytes:
   """
@@ -78,6 +81,8 @@ def sign_machikado(module_dir: str, sig_name: str, abi: str, is_64bit: bool, pri
     sign_data.extend(file_sign_data(vname, rpath))
 
   # INFO: Sign with Ed25519
+  if Ed25519PrivateKey is None:
+    raise RuntimeError("cryptography is required for signing")
   priv_key = Ed25519PrivateKey.from_private_bytes(private_key_bytes)
   signature = priv_key.sign(bytes(sign_data))
 
@@ -130,6 +135,8 @@ def sign_misaki(module_dir: str, private_key_bytes: bytes, public_key_bytes: byt
   for fpath in all_files:
     sign_data.extend(file_sign_data(fpath.name, str(fpath)))
 
+  if Ed25519PrivateKey is None:
+    raise RuntimeError("cryptography is required for signing")
   priv_key = Ed25519PrivateKey.from_private_bytes(private_key_bytes)
   signature = priv_key.sign(bytes(sign_data))
 

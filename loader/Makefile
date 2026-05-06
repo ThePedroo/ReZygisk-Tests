@@ -22,9 +22,16 @@ LOADER_CFLAGS = -std=c18 -D_GNU_SOURCE -Wall -Wextra -fno-rtti -fno-exceptions  
 				-fno-stack-protector -fomit-frame-pointer -Wno-builtin-macro-redefined \
 				'-D__FILE__=__FILE_NAME__' -DZKSU_VERSION=\"$(ZKSU_VERSION)\"
 
-COMMON_LDFLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment           \
-				 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
+ifeq ($(TERMUX_VERSION),)
+COMMON_LDFLAGS = -Wl,--build-id=none -Wl,--no-rosegment -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined \
 				 -Qunused-arguments -Wl,--gc-sections
+SHARED_LINK_FLAGS =
+SHARED_LIBS = -llog -lm
+else
+COMMON_LDFLAGS = -Wl,--no-rosegment -Wl,--no-undefined-version -Qunused-arguments -Wl,--gc-sections
+SHARED_LINK_FLAGS = -nostdlib -nostartfiles -Wl,--allow-shlib-undefined
+SHARED_LIBS =
+endif
 
 COMMON_SRCS = src/common/daemon.c src/common/elf_util.c src/common/ifunc_shim.c \
 			  src/common/misc.c src/common/socket_utils.c
@@ -103,14 +110,14 @@ $(LIBCOMMON): $(COMMON_OBJS)
 $(LIBZYGISK): $(INJECTOR_OBJS) $(LIBCOMMON) $(PLTI_LIB) $(CSOLOADER_LIB)
 	@mkdir -p $(dir $@)
 	$(CC_ARCH) -fPIC -shared -Wl,-soname,libzygisk.so              \
-		$(COMMON_LDFLAGS) $(TYPE_LDFLAGS) -nostartfiles            \
+		$(COMMON_LDFLAGS) $(TYPE_LDFLAGS) $(SHARED_LINK_FLAGS)      \
 		$(INJECTOR_OBJS) $(LIBCOMMON) $(PLTI_LIB) $(CSOLOADER_LIB) \
-		-llog -lm -o $@
+		$(SHARED_LIBS) -o $@
 
 $(LIBPTRACE): $(PTRACER_OBJS) $(LIBCOMMON)
 	@mkdir -p $(dir $@)
-	$(CC_ARCH) $(COMMON_LDFLAGS) $(TYPE_LDFLAGS) \
-		$(PTRACER_OBJS) $(LIBCOMMON) -llog -lm -o $@
+	$(CC_ARCH) $(COMMON_LDFLAGS) $(TYPE_LDFLAGS) $(SHARED_LINK_FLAGS) \
+		$(PTRACER_OBJS) $(LIBCOMMON) $(SHARED_LIBS) -o $@
 
 $(LIBZYGISK_STRIPPED): $(LIBZYGISK)
 	@mkdir -p $(dir $@)

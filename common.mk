@@ -39,7 +39,7 @@ TARGET_armeabi-v7a = armv7a-linux-androideabi$(API_LEVEL)
 TARGET_x86 = i686-linux-android$(API_LEVEL)
 TARGET_x86_64 = x86_64-linux-android$(API_LEVEL)
 
-CC_ARCH = $(CC) --target=$(TARGET_$(ARCH)) --sysroot=$(SYSROOT)
+CC_ARCH = $(CC) --target=$(TARGET_$(ARCH))
 
 NDK_CFLAGS = -DANDROID -fdata-sections -ffunction-sections -funwind-tables \
 	-fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 \
